@@ -12,7 +12,7 @@
 
 ## 🎬 Demo
 
-[Watch the 3-minute demo video](YOUR_VIDEO_LINK)
+[Watch the 3-minute demo video](https://vimeo.com/1165186173?share=copy&fl=sv&fe=ci)
 
 ---
 
