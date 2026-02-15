@@ -1,0 +1,38 @@
+# Elastic Workflow: Trigger GitHub Revert Action
+# Copy this into Kibana → Management → Workflows
+
+name: create_github_revert_pr
+description: Trigger GitHub Action to create a revert PR
+
+inputs:
+  - name: bad_commit_id
+    type: string
+    description: The commit ID to revert
+  - name: description
+    type: string
+    description: Description of why we're reverting
+
+triggers:
+  - type: manual
+
+consts:
+  # Replace with your values
+  github_token: "ghp_YOUR_TOKEN_HERE"
+  repo_owner: "YOUR_GITHUB_USERNAME"
+  repo_name: "YOUR_REPO_NAME"
+
+steps:
+  - name: trigger_github_action
+    type: http
+    with:
+      method: POST
+      url: "https://api.github.com/repos/{{ consts.repo_owner }}/{{ consts.repo_name }}/actions/workflows/auto_revert.yml/dispatches"
+      headers:
+        Authorization: "Bearer {{ consts.github_token }}"
+        Accept: "application/vnd.github+json"
+        Content-Type: "application/json"
+        X-GitHub-Api-Version: "2022-11-28"
+      body:
+        ref: "main"
+        inputs:
+          commit_id: "{{ inputs.bad_commit_id }}"
