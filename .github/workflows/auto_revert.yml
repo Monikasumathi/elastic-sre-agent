@@ -1,0 +1,41 @@
+name: Auto Revert
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_id:
+        description: 'Commit SHA to revert'
+        required: true
+
+jobs:
+  revert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Configure Git
+        run: |
+          git config user.name "SRE Bot"
+          git config user.email "bot@example.com"
+      
+      - name: Delete existing branch if exists
+        run: |
+          git push origin --delete revert-${{ inputs.commit_id }} || true
+        continue-on-error: true
+      
+      - name: Revert Commit
+        run: |
+          git checkout -b revert-${{ inputs.commit_id }}
+          git revert --no-edit ${{ inputs.commit_id }}
+          git push origin revert-${{ inputs.commit_id }}
+      
+      - name: Create PR
+        run: |
+          gh pr create \
+            --title "🚨 Revert commit ${{ inputs.commit_id }}" \
+            --body "Auto-reverted by Elastic SRE Agent" \
+            --base main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
