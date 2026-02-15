@@ -1,0 +1,28 @@
+# Elastic Workflow: Slack Notification
+# Copy this into Kibana → Management → Workflows
+
+name: notify_slack_incident
+description: Send incident alert to Slack channel
+
+inputs:
+  - name: message
+    type: string
+    description: The incident message to send
+
+triggers:
+  - type: manual
+
+consts:
+  # Replace with your Slack webhook URL
+  slack_webhook: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+
+steps:
+  - name: send_slack_notification
+    type: http
+    with:
+      method: POST
+      url: "{{ consts.slack_webhook }}"
+      headers:
+        Content-Type: "application/json"
+      body:
+        text: "🚨 *SRE Agent Alert*\n{{ inputs.message }}"
