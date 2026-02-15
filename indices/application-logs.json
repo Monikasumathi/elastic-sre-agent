@@ -1,0 +1,21 @@
+{
+  "index": "application-logs",
+  "mappings": {
+    "properties": {
+      "timestamp": { "type": "date" },
+      "level": { "type": "keyword" },
+      "service": { "type": "keyword" },
+      "message": { 
+        "type": "text",
+        "copy_to": "semantic_field"
+      },
+      "semantic_field": { "type": "semantic_text" },
+      "host": { "type": "keyword" },
+      "trace_id": { "type": "keyword" },
+      "stack_trace": { "type": "text" },
+      "request_path": { "type": "keyword" },
+      "response_code": { "type": "integer" },
+      "duration_ms": { "type": "integer" }
+    }
+  }
+}
